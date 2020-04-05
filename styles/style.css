@@ -64,6 +64,7 @@ body {
    align-items: center;
 }
 .textarea{
+   resize: vertical;
    width:100%;
    margin-bottom:5px;
    padding:7px 10px;
