@@ -4,6 +4,7 @@
 <head>
    <meta charset="utf-8">
    <link rel="stylesheet" href="./styles/style.css">
+   <script type="text/javascript" src="./scripts/apiCallers.js"></script>
    <title>Caesar Cipher Solver</title>
 </head>
 
@@ -22,45 +23,46 @@
          <div class="row">
             <div class="cell">
 
-               <form class="form" action="/plaintext" method="POST">
+               <!-- Plaintext -> Ciphertext -->
+               <div class="form">
                   <div class="form-group">
                      <label class="label">Plaintext</label>
                   </div>
                   <div class="form-group">
-                     <textarea name="text" placeholder="Enter text" class="textarea" rows="7"></textarea>
+                     <textarea name="text" id="plaintext-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
                   </div>
                   <div class="form-group">
                      <label class="label" style="width: 20%;">Shift:</label>
-                     <input name="shift" type="number" class="textarea" required>
+                     <input name="shift" id="plaintext-shift" type="number" class="textarea" required>
                   </div>
-                  <div class="form-group"><button type="submit" class="button">ENCRYPT</button></div>
-               </form>
+                  <div class="form-group"><button id="encryptButton" type="submit" class="button">ENCRYPT</button></div>
+               </div>
 
             </div>
             <div class="cell" id="gap"></div>
             <div class="cell">
 
-               <form class="form" action="/ciphertext" method="POST">
+               <!-- Ciphertext -> Plaintext -->
+               <div class="form">
                   <div class="form-group">
                      <label class="label">Ciphertext</label>
                   </div>
                   <div class="form-group">
-                     <textarea name="text" placeholder="Enter text" class="textarea" rows="7"></textarea>
+                     <textarea name="text" id="ciphertext-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
                   </div>
                   <div class="form-group">
                      <label class="label" style="width: 20%;">Shift:</label>
-                     <input name="shift" type="number" id="shift" class="textarea">
+                     <input name="shift" id="ciphertext-shift" type="number" id="shift" class="textarea">
                   </div>
-
                   <div class="row" style="padding: 0;">
                      <div class="cell" style="padding-right: 5px;">
-                        <input type="submit" class="button" name="action" value="SOLVE">
+                        <input id="solveButton" type="submit" class="button" name="action" value="SOLVE">
                      </div>
                      <div class="cell" style="padding-left: 5px;">
-                        <input type="submit" class="button" name="action" value="DECRYPT">
+                        <input id="decryptButton" type="submit" class="button" name="action" value="DECRYPT">
                      </div>
                   </div>
-               </form>
+               </div>
 
             </div>
          </div>
