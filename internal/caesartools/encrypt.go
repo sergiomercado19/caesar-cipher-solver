@@ -10,7 +10,6 @@ func Encrypt(text string, shift int) string {
 
 	// Mod shift to ensure -25 <= shift <= 25
 	var offset int = int(math.Mod(float64(shift), 26))
-
 	var ciphertext string = ""
 
 	for i := 0; i < len(text); i++ {

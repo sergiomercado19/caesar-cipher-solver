@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,65 +10,84 @@ import (
 	"caesartools"
 )
 
-func parsePlaintext(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Only POST method is supported", http.StatusNotFound)
-		return
-	}
-
-	// Request
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
-	}
-	fmt.Printf("plaintext received | r.PostFrom = %v\n", r.PostForm)
-	text := r.FormValue("text")
-	shift, _ := strconv.Atoi(r.FormValue("shift"))
-	var ciphertext string = caesartools.Encrypt(text, shift)
-
-	// Response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"ciphertext": "` + ciphertext + `"}`))
+type payload struct {
+	Text  string
+	Shift string
 }
 
-func parseCiphertext(w http.ResponseWriter, r *http.Request) {
+func handleEncrypt(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Only POST method is supported", http.StatusNotFound)
 		return
 	}
 
 	// Request
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
+	decoder := json.NewDecoder(r.Body)
+	var request payload
+	if err := decoder.Decode(&request); err != nil {
+		fmt.Fprintf(w, "Unable to parse request payload | err: %v", err)
 		return
 	}
-	fmt.Printf("ciphertext received | r.PostFrom = %v\n", r.PostForm)
-	mode := r.FormValue("action")
-
-	var plaintext string
-	switch mode {
-	case "DECRYPT":
-		text := r.FormValue("text")
-		shift, _ := strconv.Atoi(r.FormValue("shift"))
-		plaintext = caesartools.Decrypt(text, shift)
-	case "SOLVE":
-		text := r.FormValue("text")
-		plaintext = caesartools.Solve(text)
-	default:
-		plaintext = ""
-	}
+	fmt.Printf("ENCRYPTING: plaintext received | payload = %v\n", request)
+	shift, _ := strconv.Atoi(request.Shift)
+	var ciphertext string = caesartools.Encrypt(request.Text, shift)
 
 	// Response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"plaintext": "` + plaintext + `"}`))
+	w.Write([]byte(`{"response": "` + ciphertext + `"}`))
+}
+
+func handleDecrypt(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Only POST method is supported", http.StatusNotFound)
+		return
+	}
+
+	// Request
+	decoder := json.NewDecoder(r.Body)
+	var request payload
+	if err := decoder.Decode(&request); err != nil {
+		fmt.Fprintf(w, "Unable to parse request payload | err: %v", err)
+		return
+	}
+	fmt.Printf("DECRYPTING: plaintext received | payload = %v\n", request)
+	shift, _ := strconv.Atoi(request.Shift)
+	var plaintext string = caesartools.Decrypt(request.Text, shift)
+
+	// Response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"response": "` + plaintext + `"}`))
+}
+
+func handleSolve(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Only POST method is supported", http.StatusNotFound)
+		return
+	}
+
+	// Request
+	decoder := json.NewDecoder(r.Body)
+	var request payload
+	if err := decoder.Decode(&request); err != nil {
+		fmt.Fprintf(w, "Unable to parse request payload | err: %v", err)
+		return
+	}
+	fmt.Printf("SOLVING: plaintext received | payload = %v\n", request)
+	var plaintext string = caesartools.Solve(request.Text)
+
+	// Response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"response": "` + plaintext + `"}`))
 }
 
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("./website")))
-	http.HandleFunc("/plaintext", parsePlaintext)
-	http.HandleFunc("/ciphertext", parseCiphertext)
+	http.HandleFunc("/encrypt", handleEncrypt)
+	http.HandleFunc("/decrypt", handleDecrypt)
+	http.HandleFunc("/solve", handleSolve)
 
 	log.Fatal(http.ListenAndServe(":8090", nil))
 }
