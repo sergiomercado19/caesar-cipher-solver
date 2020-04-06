@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"caesartools"
 )
 
 func parsePlaintext(w http.ResponseWriter, r *http.Request) {
@@ -18,10 +20,10 @@ func parsePlaintext(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
 	}
-	fmt.Fprintf(w, "plaintext received | r.PostFrom = %v\n", r.PostForm)
+	fmt.Printf("plaintext received | r.PostFrom = %v\n", r.PostForm)
 	text := r.FormValue("text")
 	shift, _ := strconv.Atoi(r.FormValue("shift"))
-	var ciphertext string = encrypt(text, shift)
+	var ciphertext string = caesartools.Encrypt(text, shift)
 
 	// Response
 	w.Header().Set("Content-Type", "application/json")
@@ -40,7 +42,7 @@ func parseCiphertext(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
 	}
-	fmt.Fprintf(w, "ciphertext received | r.PostFrom = %v\n", r.PostForm)
+	fmt.Printf("ciphertext received | r.PostFrom = %v\n", r.PostForm)
 	mode := r.FormValue("action")
 
 	var plaintext string
@@ -48,10 +50,10 @@ func parseCiphertext(w http.ResponseWriter, r *http.Request) {
 	case "DECRYPT":
 		text := r.FormValue("text")
 		shift, _ := strconv.Atoi(r.FormValue("shift"))
-		plaintext = decrypt(text, shift)
+		plaintext = caesartools.Decrypt(text, shift)
 	case "SOLVE":
 		text := r.FormValue("text")
-		plaintext = solve(text)
+		plaintext = caesartools.Solve(text)
 	default:
 		plaintext = ""
 	}
@@ -63,8 +65,9 @@ func parseCiphertext(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	http.Handle("/", http.FileServer(http.Dir("./website")))
 	http.HandleFunc("/plaintext", parsePlaintext)
 	http.HandleFunc("/ciphertext", parseCiphertext)
 
-	log.Fatal(http.ListenAndServe(":8090", http.FileServer(http.Dir("./website"))))
+	log.Fatal(http.ListenAndServe(":8090", nil))
 }
