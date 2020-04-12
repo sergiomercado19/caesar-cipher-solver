@@ -15,6 +15,8 @@ type payload struct {
 	Shift string
 }
 
+var dictionary map[string]int
+
 func handleEncrypt(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Only POST method is supported", http.StatusNotFound)
@@ -30,7 +32,7 @@ func handleEncrypt(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("ENCRYPTING: plaintext received | payload = %v\n", request)
 	shift, _ := strconv.Atoi(request.Shift)
-	var ciphertext string = caesartools.Encrypt(request.Text, shift)
+	var ciphertext string = caesartools.Shift(request.Text, shift)
 
 	// Response
 	w.Header().Set("Content-Type", "application/json")
@@ -51,9 +53,9 @@ func handleDecrypt(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Unable to parse request payload | err: %v", err)
 		return
 	}
-	fmt.Printf("DECRYPTING: plaintext received | payload = %v\n", request)
+	fmt.Printf("DECRYPTING: ciphertext received | payload = %v\n", request)
 	shift, _ := strconv.Atoi(request.Shift)
-	var plaintext string = caesartools.Decrypt(request.Text, shift)
+	var plaintext string = caesartools.Shift(request.Text, -1*shift)
 
 	// Response
 	w.Header().Set("Content-Type", "application/json")
@@ -74,13 +76,14 @@ func handleSolve(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Unable to parse request payload | err: %v", err)
 		return
 	}
-	fmt.Printf("SOLVING: plaintext received | payload = %v\n", request)
-	var plaintext string = caesartools.Solve(request.Text)
+	fmt.Printf("SOLVING: ciphertext received | payload = %v\n", request)
+	var shift int = caesartools.Solve(request.Text, dictionary)
+	var plaintext string = caesartools.Shift(request.Text, -1*shift)
 
 	// Response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"response": "` + plaintext + `"}`))
+	w.Write([]byte(`{"response": "` + plaintext + `", "shift": "` + strconv.Itoa(shift) + `"}`))
 }
 
 func main() {
@@ -89,5 +92,10 @@ func main() {
 	http.HandleFunc("/decrypt", handleDecrypt)
 	http.HandleFunc("/solve", handleSolve)
 
+	// Initialize dictionary map
+	dictionary = make(map[string]int)
+	caesartools.ParseWords(dictionary)
+
+	fmt.Println("Listening on port 8090")
 	log.Fatal(http.ListenAndServe(":8090", nil))
 }
