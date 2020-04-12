@@ -5,12 +5,12 @@ import (
 	"math"
 )
 
-// Encrypt takes in plaintext and a shift and encrypts the text using the Caesar Cipher algorthm
-func Encrypt(text string, shift int) string {
+// Shift takes in text and a shift and encrypts/decrypts the text using the Caesar Cipher algorthm
+func Shift(text string, shift int) string {
 
 	// Mod shift to ensure -25 <= shift <= 25
 	var offset int = int(math.Mod(float64(shift), 26))
-	var ciphertext string = ""
+	var output string = ""
 
 	for i := 0; i < len(text); i++ {
 
@@ -22,7 +22,7 @@ func Encrypt(text string, shift int) string {
 			} else if offset < 0 && newVal < 'A' {
 				newVal = 'Z' + 1 + (newVal - 'A')
 			}
-			ciphertext += fmt.Sprintf("%c", newVal)
+			output += fmt.Sprintf("%c", newVal)
 		} else if rune(text[i]) >= 'a' && rune(text[i]) <= 'z' {
 			// Lowercase
 			var newVal rune = rune(text[i]) + rune(offset)
@@ -31,11 +31,11 @@ func Encrypt(text string, shift int) string {
 			} else if offset < 0 && newVal < 'a' {
 				newVal = 'z' + 1 + (newVal - 'a')
 			}
-			ciphertext += fmt.Sprintf("%c", newVal)
+			output += fmt.Sprintf("%c", newVal)
 		} else {
-			ciphertext += fmt.Sprintf("%c", text[i])
+			output += fmt.Sprintf("%c", text[i])
 		}
 	}
 
-	return ciphertext
+	return output
 }
