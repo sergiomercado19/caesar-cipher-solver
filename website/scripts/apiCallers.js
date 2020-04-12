@@ -20,6 +20,7 @@ export async function encryptAction() {
    switch (res.status) {
       case 200:
          cipherboxText.value = (await res.json()).response;
+         cipherboxText.classList.add("output-flash");
       default:
          // Failure
    }
@@ -44,6 +45,7 @@ export async function decryptAction() {
    switch (res.status) {
       case 200:
          plainboxText.value = (await res.json()).response;
+         plainboxText.classList.add("output-flash");
       default:
          // Failure
    }
@@ -66,7 +68,11 @@ export async function solveAction() {
    const res = await fetch("/solve", options);
    switch (res.status) {
       case 200:
-         plainboxText.value = (await res.json()).response;
+         let ret = await res.json()
+         plainboxText.value = ret.response;
+         plainboxText.classList.add("output-flash");
+         plainboxShift.value = ret.shift;
+         plainboxShift.classList.add("output-flash");
       default:
          // Failure
    }
