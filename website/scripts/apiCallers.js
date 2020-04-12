@@ -1,19 +1,13 @@
-window.onload = () => {
-   const encryptButton = document.getElementById("encryptButton");
-   encryptButton.addEventListener("click", encryptAction);
-
-   const decryptButton = document.getElementById("decryptButton"); 
-   decryptButton.addEventListener("click", decryptAction);
-
-   const solveButton = document.getElementById("solveButton"); 
-   solveButton.addEventListener("click", solveAction);
-}
+import {plainboxText, plainboxShift, cipherboxText, cipherboxShift} from "./elements.js";
+import * as verify from "./formVerification.js";
 
 // Handle encrypt button
-async function encryptAction() {
+export async function encryptAction() {
+   if (!verify.encryptForm()) return;
+
    const payload = {
-      text: document.getElementById("plaintext-text").value,
-      shift: document.getElementById("plaintext-shift").value
+      text: plainboxText.value,
+      shift: plainboxShift.value
    }
    const options = {
       method: 'POST',
@@ -25,17 +19,19 @@ async function encryptAction() {
    const res = await fetch("/encrypt", options);
    switch (res.status) {
       case 200:
-         document.getElementById("ciphertext-text").value = (await res.json()).response;
+         cipherboxText.value = (await res.json()).response;
       default:
          // Failure
    }
 };
 
 // Handle decrypt button
-async function decryptAction() { 
+export async function decryptAction() {
+   if (!verify.decryptForm()) return;
+
    const payload = {
-      text: document.getElementById("ciphertext-text").value,
-      shift: document.getElementById("ciphertext-shift").value
+      text: cipherboxText.value,
+      shift: cipherboxShift.value
    }
    const options = {
       method: 'POST',
@@ -47,16 +43,18 @@ async function decryptAction() {
    const res = await fetch("/decrypt", options);
    switch (res.status) {
       case 200:
-         document.getElementById("plaintext-text").value = (await res.json()).response;
+         plainboxText.value = (await res.json()).response;
       default:
          // Failure
    }
 }
 
 // Handle solve button
-async function solveAction() { 
+export async function solveAction() {
+   if (!verify.solveForm()) return;
+
    const payload = {
-      text: document.getElementById("ciphertext-text").value,
+      text: cipherboxText.value,
    }
    const options = {
       method: 'POST',
@@ -68,7 +66,7 @@ async function solveAction() {
    const res = await fetch("/solve", options);
    switch (res.status) {
       case 200:
-         document.getElementById("plaintext-text").value = (await res.json()).response;
+         plainboxText.value = (await res.json()).response;
       default:
          // Failure
    }

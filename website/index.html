@@ -4,7 +4,7 @@
 <head>
    <meta charset="utf-8">
    <link rel="stylesheet" href="./styles/style.css">
-   <script type="text/javascript" src="./scripts/apiCallers.js"></script>
+   <script type="module" src="./scripts/main.js"></script>
    <title>Caesar Cipher Solver</title>
 </head>
 
@@ -29,11 +29,11 @@
                      <label class="label">Plaintext</label>
                   </div>
                   <div class="form-group">
-                     <textarea name="text" id="plaintext-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
+                     <textarea name="text" id="plainbox-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
                   </div>
                   <div class="form-group">
                      <label class="label" style="width: 20%;">Shift:</label>
-                     <input name="shift" id="plaintext-shift" type="number" class="textarea" required>
+                     <input name="shift" id="plainbox-shift" type="number" class="textarea" required>
                   </div>
                   <div class="form-group"><button id="encryptButton" type="submit" class="button">ENCRYPT</button></div>
                </div>
@@ -48,11 +48,11 @@
                      <label class="label">Ciphertext</label>
                   </div>
                   <div class="form-group">
-                     <textarea name="text" id="ciphertext-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
+                     <textarea name="text" id="cipherbox-text" placeholder="Enter text" class="textarea" rows="7"></textarea>
                   </div>
                   <div class="form-group">
                      <label class="label" style="width: 20%;">Shift:</label>
-                     <input name="shift" id="ciphertext-shift" type="number" id="shift" class="textarea">
+                     <input name="shift" id="cipherbox-shift" type="number" id="shift" class="textarea">
                   </div>
                   <div class="row" style="padding: 0;">
                      <div class="cell" style="padding-right: 5px;">
