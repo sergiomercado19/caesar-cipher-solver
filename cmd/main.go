@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"caesartools"
+	"ratelimiter"
 )
 
 type payload struct {
@@ -87,15 +88,17 @@ func handleSolve(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("./website")))
-	http.HandleFunc("/encrypt", handleEncrypt)
-	http.HandleFunc("/decrypt", handleDecrypt)
-	http.HandleFunc("/solve", handleSolve)
+	mux := http.NewServeMux()
+
+	mux.Handle("/", http.FileServer(http.Dir("./website")))
+	mux.HandleFunc("/encrypt", handleEncrypt)
+	mux.HandleFunc("/decrypt", handleDecrypt)
+	mux.HandleFunc("/solve", handleSolve)
 
 	// Initialize dictionary map
 	dictionary = make(map[string]int)
 	caesartools.ParseWords(dictionary)
 
 	fmt.Println("Listening on port 8090")
-	log.Fatal(http.ListenAndServe(":8090", nil))
+	log.Fatal(http.ListenAndServe(":8090", ratelimiter.Limit(mux)))
 }
