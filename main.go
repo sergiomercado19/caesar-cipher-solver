@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"caesartools"
-	"ratelimiter"
+	"caesarciphersolver/internal/caesartools"
+	"caesarciphersolver/internal/ratelimiter"
 )
 
 type payload struct {
