@@ -1,18 +1,19 @@
 # Caesar Cipher Solver
-A Caesar cipher solver that makes calls to an API to check the validity of words after each shift attempt.
+This application has 3 main functions to interact with caesar ciphers:
+- Solve: checks the validity of words after each shift attempt (0-25).
+- Encrypt: shift every letter forward, in the given string alphabetically, by a certain shift.
+- Decrypt: shift every letter backward, in the given string alphabetically, by a certain shift.
 
-My Caesar cipher solver will be a web app. Additionally, to fulfil the objectives of this course and to get an understanding of applied cyber security concepts, I will add DoS protection to the webapp. This will be demonstrated by running a python http server and writting a Go script to query the website many times a second. I will then go on the website from a different device and show that only the IP where the spam is coming from, is blocked.
+## Features
+The solving feature consists of breaking the input string by words and calculating the number of words found in a dictionary after each shift, keeping track of shift that has the most matches.
 
-## Milestones
-1. Single word Caesar cipher solver. The word will have to be from the dictionary as an API will be used to match for known words.
-2. Multi word Caesar cipher solver. If not all words can be found in the dictionary, return up to two possible matches.
-3. Demonstrate a DoS attack on the web app and research mitigation methods, if feasible, implement them.
-4. Research and, if feasible, implement a more advanced encryption/decryption techinque.
+Rate limiting capabilities to protect against spam from clients and even denial of service (DoS) attacks.
 
-## Criteria
-| Grade | Criteria |
-| --- | --- | 
-| PS | Created a usable multi-word Caesar cipher solver that only works with words found in an English dictionary. |
-| CR | Created a user-friendly multi-word Caesar cipher solver that works in most cases. At least one word has to be found in an English dictionary. |
-| DN | Replicate a DoS attack on a website containing a multi word Caesar cipher solver. Research and/or implement DoS mitigation methods. Complete Milestones 1, 2 and 3. |
-| HD | Research more advanced encryption/decryption techniques (e.g. RSA, DES, AES) and attempt to implement one. |
+## Usage
+Since this application is written in [Go](https://golang.org/), make sure that you have it installed before proceeding.
+
+To get started, execute the following command from the project root directory
+```
+go run main.go
+```
+and navigate to `localhost:8090` on your browser.
