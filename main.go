@@ -1,11 +1,11 @@
 /*
-  Caesar Cipher Solver
-  --
-  This application has 3 main functions to interact with caesar ciphers:
-  - Solve
-  - Encrypt
-  - Decrypt
-*/
+ * Caesar Cipher Solver
+ * --
+ * This application has 3 main functions to interact with caesar ciphers:
+ * - Solve
+ * - Encrypt
+ * - Decrypt
+ */
 
 package main
 
