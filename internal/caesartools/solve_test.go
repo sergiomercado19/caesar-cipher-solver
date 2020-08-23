@@ -6,7 +6,7 @@ func TestSolve(t *testing.T) {
 
 	// Initialize dictionary map
 	var dictionary map[string]int = make(map[string]int)
-	ParseWords(dictionary)
+	ParseWords(dictionary, "words.txt")
 
 	t.Run("Solve sentence whose words are found in the dictionary", func(t *testing.T) {
 		// var plaintext string = "When one door of happiness closes, another opens; but often we look so long at the closed door that we do not see the one which has been opened for us."

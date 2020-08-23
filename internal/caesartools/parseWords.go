@@ -7,9 +7,8 @@ import (
 )
 
 // ParseWords puts the lists of words.txt into a map
-func ParseWords(dictionary map[string]int) {
-
-	file, err := os.Open("internal/caesartools/words.txt")
+func ParseWords(dictionary map[string]int, wordsPath string) {
+	file, err := os.Open(wordsPath)
 	if err != nil {
 		log.Fatal(err)
 	}

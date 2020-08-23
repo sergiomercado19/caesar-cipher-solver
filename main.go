@@ -115,7 +115,7 @@ func main() {
 
 	// Initialize dictionary map
 	dictionary = make(map[string]int)
-	caesartools.ParseWords(dictionary)
+	caesartools.ParseWords(dictionary, "internal/caesartools/words.txt")
 
 	// Initialize server with rate limiting
 	fmt.Println("Listening on port 8090")
